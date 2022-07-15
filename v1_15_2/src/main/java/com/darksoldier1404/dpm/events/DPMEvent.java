@@ -56,16 +56,16 @@ public class DPMEvent implements Listener {
                     if (NBT.hasTagKey(e.getCurrentItem(), "op_cmd")) {
                         Bukkit.getScheduler().runTaskLater(plugin, () -> {
                             if(p.isOp()){
-                                p.performCommand(command);
+                                p.performCommand(command.replace("<player>", p.getName()));
                             }else{
                                 p.setOp(true);
-                                p.performCommand(command);
+                                p.performCommand(command.replace("<player>", p.getName()));
                                 p.setOp(false);
                             }
                         }, 2L);
                     } else {
                         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                            p.performCommand(command);
+                            p.performCommand(command.replace("<player>", p.getName()));
                         }, 2L);
                     }
                 }
