@@ -1,0 +1,8 @@
+name: DP-Menu
+version: 1.0.0.1
+main: com.darksoldier1404.dpm.Menu
+authors: [ DEAD_POOLIO_ ]
+depend:
+  - DPP-Core
+commands:
+  dpm:
