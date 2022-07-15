@@ -10,10 +10,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @SuppressWarnings("all")
 public class DPMCommand implements CommandExecutor, TabCompleter {
@@ -41,6 +39,7 @@ public class DPMCommand implements CommandExecutor, TabCompleter {
                 p.sendMessage(plugin.data.getPrefix() + "/dpm cwc <name> - 메뉴의 아이템 클릭시 메뉴를 닫히게 할지 설정합니다. (CloseWhenClick)");
                 p.sendMessage(plugin.data.getPrefix() + "/dpm sound <name> - 메뉴의 클릭시 사운드를 설정합니다.");
                 p.sendMessage(plugin.data.getPrefix() + "/dpm aliases <name> <cmd> - 메뉴의 단축 명령어를 설정합니다.");
+                p.sendMessage(plugin.data.getPrefix() + "/dpm list - 모든 메뉴를 보여줍니다.");
                 p.sendMessage(plugin.data.getPrefix() + "/dpm reload - 메뉴를 리로드합니다.");
             }
             return false;
@@ -145,6 +144,30 @@ public class DPMCommand implements CommandExecutor, TabCompleter {
             DPMFunction.openCWCSettingGUI(p, args[1]);
             return false;
         }
+        if(args[0].equalsIgnoreCase("aliases")) {
+            if(args.length == 1) {
+                p.sendMessage(plugin.data.getPrefix() + "설정할 메뉴의 이름을 입력해주세요.");
+                return false;
+            }
+            if(args.length == 2) {
+                p.sendMessage(plugin.data.getPrefix() + "메뉴의 단축 명령어를 입력해주세요.");
+                return false;
+            }
+            DPMFunction.setAliases(p, args[1], args[2]);
+            return false;
+        }
+        if(args[0].equalsIgnoreCase("list")) {
+            p.sendMessage(plugin.data.getPrefix() + "<<< 메뉴 목록 >>>");
+            plugin.menus.keySet().forEach(key -> {
+                p.sendMessage(plugin.data.getPrefix() + " - " + key);
+            });
+            return false;
+        }
+        if(args[0].equalsIgnoreCase("reload")) {
+            plugin.data.reload();
+            p.sendMessage(plugin.data.getPrefix() + "설정을 다시 불러왔습니다.");
+            return false;
+        }
         return false;
     }
 
@@ -153,7 +176,7 @@ public class DPMCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         if (args.length == 1) {
             if (sender.hasPermission("dpm.admin")) {
-                return Arrays.asList("open", "create", "delete", "title", "row", "items", "cmds", "op", "sound");
+                return Arrays.asList("open", "create", "delete", "title", "row", "items", "cmds", "op", "sound", "cwc", "reload", "aliases");
             }
             return Arrays.asList("open");
         }
