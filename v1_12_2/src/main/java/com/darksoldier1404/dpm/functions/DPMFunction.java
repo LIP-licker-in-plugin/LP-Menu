@@ -127,7 +127,7 @@ public class DPMFunction {
 
     public static void saveItemSetting(Player p, String name, DInventory inv) {
         if (!isValid(name)) return;
-        if (currentEditItem.containsKey(p.getUniqueId())) return;
+        
         YamlConfiguration data = plugin.menus.get(name);
         for (int i = 0; i < inv.getSize(); i++) {
             ItemStack item = inv.getItem(i);
