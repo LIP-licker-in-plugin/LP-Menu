@@ -150,10 +150,6 @@ public class DPMCommand implements CommandExecutor, TabCompleter {
                 p.sendMessage(plugin.data.getPrefix() + "설정할 메뉴의 이름을 입력해주세요.");
                 return false;
             }
-            if (args.length == 2) {
-                p.sendMessage(plugin.data.getPrefix() + "설정할 메뉴의 가격을 입력해주세요.");
-                return false;
-            }
             DPMFunction.openPriceSettingGUI(p, args[1]);
             return false;
         }
