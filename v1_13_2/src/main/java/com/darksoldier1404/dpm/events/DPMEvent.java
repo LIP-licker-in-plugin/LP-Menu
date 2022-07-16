@@ -36,6 +36,7 @@ public class DPMEvent implements Listener {
     public void onInventoryClose(InventoryCloseEvent e) {
         if (e.getInventory() instanceof DInventory) {
             DInventory inv = (DInventory) e.getInventory();
+            if(!inv.isValidHandler(plugin)) return;
             if (inv.getObj() == null) {
                 return;
             }
@@ -47,6 +48,7 @@ public class DPMEvent implements Listener {
     public void onInventoryClick(InventoryClickEvent e) {
         if (e.getInventory() instanceof DInventory) {
             DInventory inv = (DInventory) e.getInventory();
+            if(!inv.isValidHandler(plugin)) return;
             if (e.getCurrentItem() == null) return;
             Player p = (Player) e.getWhoClicked();
             if (inv.getObj() == null) {

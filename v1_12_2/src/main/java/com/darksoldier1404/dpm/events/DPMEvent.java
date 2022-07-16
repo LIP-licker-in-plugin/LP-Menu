@@ -36,6 +36,7 @@ public class DPMEvent implements Listener {
     public void onInventoryClose(InventoryCloseEvent e) {
         if (DPMFunction.currentInv.containsKey(e.getPlayer().getUniqueId())) {
             DInventory inv = DPMFunction.currentInv.get(e.getPlayer().getUniqueId());
+            if(!inv.isValidHandler(plugin)) return;
             if (inv.getObj() != null) {
                 DPMFunction.saveItemSetting((Player) e.getPlayer(), ((Tuple<String, String>) inv.getObj()).getA(), inv);
             }
@@ -47,6 +48,7 @@ public class DPMEvent implements Listener {
     public void onInventoryClick(InventoryClickEvent e) {
         if (DPMFunction.currentInv.containsKey(e.getWhoClicked().getUniqueId())) {
             DInventory inv = DPMFunction.currentInv.get(e.getWhoClicked().getUniqueId());
+            if(!inv.isValidHandler(plugin)) return;
             if (e.getCurrentItem() == null) return;
             Player p = (Player) e.getWhoClicked();
             if (inv.getObj() == null) {
