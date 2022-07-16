@@ -51,13 +51,29 @@ public class DPMEvent implements Listener {
             Player p = (Player) e.getWhoClicked();
             if (inv.getObj() == null) {
                 e.setCancelled(true);
+                if (NBT.hasTagKey(e.getCurrentItem(), "dpm.price")) {
+                    String sprice = NBT.getStringTag(e.getCurrentItem(), "dpm.price");
+                    try {
+                        double price = Double.parseDouble(sprice);
+                        if (MoneyAPI.hasEnoughMoney(p, price)) {
+                            MoneyAPI.takeMoney(p, price);
+                        }else{
+                            p.sendMessage(plugin.data.getPrefix() + "소지금이 부족합니다.");
+                            return;
+                        }
+                    } catch (Exception ex) {
+                        p.sendMessage(plugin.data.getPrefix() + "가격 설정이 잘못되었습니다.");
+                        p.sendMessage(plugin.data.getPrefix() + "가격 : " + NBT.getStringTag(e.getCurrentItem(), "dpm.price"));
+                        return;
+                    }
+                }
                 if (NBT.hasTagKey(e.getCurrentItem(), "dpm.command")) {
                     String command = NBT.getStringTag(e.getCurrentItem(), "dpm.command");
                     if (NBT.hasTagKey(e.getCurrentItem(), "op_cmd")) {
                         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                            if(p.isOp()){
+                            if (p.isOp()) {
                                 p.performCommand(command.replace("<player>", p.getName()));
-                            }else{
+                            } else {
                                 p.setOp(true);
                                 p.performCommand(command.replace("<player>", p.getName()));
                                 p.setOp(false);
@@ -82,18 +98,8 @@ public class DPMEvent implements Listener {
                         p.sendMessage(plugin.data.getPrefix() + "피치 : " + NBT.getStringTag(e.getCurrentItem(), "dpm.sound_pitch"));
                     }
                 }
-                if(NBT.hasTagKey(e.getCurrentItem(), "dpm.cwc")) {
+                if (NBT.hasTagKey(e.getCurrentItem(), "dpm.cwc")) {
                     p.closeInventory();
-                }
-                if(NBT.hasTagKey(e.getCurrentItem(), "dpm.price")) {
-                    String sprice = NBT.getStringTag(e.getCurrentItem(), "dpm.price");
-                    try{
-                        double price = Double.parseDouble(sprice);
-                        MoneyAPI.takeMoney(p, price);
-                    }catch(Exception ex) {
-                        p.sendMessage(plugin.data.getPrefix() + "가격 설정이 잘못되었습니다.");
-                        p.sendMessage(plugin.data.getPrefix() + "가격 : " + NBT.getStringTag(e.getCurrentItem(), "dpm.price"));
-                    }
                 }
                 return;
             }
@@ -111,7 +117,7 @@ public class DPMEvent implements Listener {
                     p.closeInventory();
                     p.sendMessage(plugin.data.getPrefix() + "설정하실 사운드를 입력하세요. ( EX) ui.button.click 1 1 )");
                 }
-                if(b.equalsIgnoreCase("price")) {
+                if (b.equalsIgnoreCase("price")) {
                     DPMFunction.currentEditItem.put(p.getUniqueId(), Quadruple.of(t.getA(), e.getCurrentItem(), "price", e.getSlot()));
                     p.closeInventory();
                     p.sendMessage(plugin.data.getPrefix() + "설정하실 가격을 입력하세요.");
@@ -157,7 +163,7 @@ public class DPMEvent implements Listener {
                     DPMFunction.currentEditItem.remove(e.getPlayer().getUniqueId());
                 });
             }
-            if(t.getC().equalsIgnoreCase("price")) {
+            if (t.getC().equalsIgnoreCase("price")) {
                 t.setB(DPMFunction.setPrice(t.getB(), e.getMessage()));
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     DPMFunction.openPriceSettingGUI(e.getPlayer(), t.getA(), t.getB(), t.getD());
